@@ -6,4 +6,4 @@ class TestRestServer(unittest.TestCase):
         self.assertEqual(1, 1)
 
     def test_foo2(self):
-        self.assertEqual(2, 1)
+        self.assertEqual(2, 2)
