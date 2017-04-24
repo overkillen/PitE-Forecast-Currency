@@ -1,3 +1,4 @@
 podłączenie się pod źródła danych
 gui ma je wyświetlać
 żeby działało na zewnętrznym serwerze
+i mock przewidywania
