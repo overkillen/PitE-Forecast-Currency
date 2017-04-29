@@ -45,9 +45,12 @@ class RestServer:
     @staticmethod
     @app.route("/currency/forecast/<currency>")
     def forecast_currency(currency):
+        supported_methods = ["method1", "method2"]
         forecast_method = request.args.get('method')
         if forecast_method==None:
-            forecast_method="method1"
+            forecast_method=supported_methods[0]
+        if not (forecast_method in supported_methods):
+            return flask.Response(status=404)
         response = JsonResponse(json.dumps({currency:"forecast", "method":forecast_method}))
         return response.prepare_response()
 
