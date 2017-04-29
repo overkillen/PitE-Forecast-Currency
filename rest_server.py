@@ -1,6 +1,7 @@
 from flask import Flask
 import flask
 import json
+import sys
 
 
 class JsonResponse:
@@ -36,10 +37,10 @@ class RestServer:
         return response.prepare_response()
 
     @staticmethod
-    def run_server():
-        RestServer.app.run(host='127.0.0.1', port='443')
+    def run_server(port_to_listen):
+        RestServer.app.run(host='127.0.0.1', port=port_to_listen)
 
 
 if __name__ == '__main__':
     server = RestServer()
-    server.run_server()
+    server.run_server(sys.argv[1])
