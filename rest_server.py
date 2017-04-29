@@ -38,7 +38,7 @@ class RestServer:
 
     @staticmethod
     def run_server(port_to_listen):
-        RestServer.app.run(host='127.0.0.1', port=port_to_listen)
+        RestServer.app.run(host='0.0.0.0', port=port_to_listen)
 
 
 if __name__ == '__main__':
