@@ -1,7 +1,7 @@
 from flask import Flask
 import flask
 import json
-import sys
+import argparse
 
 
 class JsonResponse:
@@ -42,5 +42,9 @@ class RestServer:
 
 
 if __name__ == '__main__':
+    argparser = argparse.ArgumentParser(description='Runs rest server for forecast currency')
+    argparser.add_argument('--port', dest='port', default=5000)
+    args = argparser.parse_args()
+
     server = RestServer()
-    server.run_server(sys.argv[1])
+    server.run_server(args.port)

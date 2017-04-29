@@ -1,1 +1,1 @@
-web: python rest_server.py $PORT
+web: python rest_server.py --port $PORT
