@@ -1,1 +1,1 @@
-rest_server.py
+web: python rest_server.py
