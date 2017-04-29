@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import request
 import flask
 import json
 import argparse
@@ -24,16 +25,30 @@ class RestServer:
     def index():
         return "Currency forecast"
 
+    """
+    Returns actual currency value (for today).
+    Example: GET /currency/actual/usd
+             Returns: {"usd:3.99"}
+    """
     @staticmethod
-    @app.route("/currency/<currency>")
+    @app.route("/currency/actual/<currency>")
     def get_currency(currency):
-        response = JsonResponse(json.dumps({currency:"simple get"}))
+        response = JsonResponse(json.dumps({currency:"actual"}))
         return response.prepare_response()
 
+    """
+       Returns currency forecast. You can specify method in 'method' parameter
+       Example: GET /currency/forecast/usd
+                GET /currency/forecast/usd?method=better_method
+                Returns: {"usd:3.99, "method":"better_method"}
+       """
     @staticmethod
     @app.route("/currency/forecast/<currency>")
     def forecast_currency(currency):
-        response = JsonResponse(json.dumps({currency:"forecast"}))
+        forecast_method = request.args.get('method')
+        if forecast_method==None:
+            forecast_method="method1"
+        response = JsonResponse(json.dumps({currency:"forecast", "method":forecast_method}))
         return response.prepare_response()
 
     @staticmethod
