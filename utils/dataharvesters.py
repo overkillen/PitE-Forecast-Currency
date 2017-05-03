@@ -27,7 +27,7 @@ def pull_from_fixer(date='latest', base='PLN'):
     return resp.json()
 
 
-#Data in nbp api is splited into 2 categories
+# Data in nbp api is splited into 2 categories
 CURRENCY_TO_CATEGORY = {
         'THB': 'A', 'USD': 'A', 'AUD': 'A', 'HKD': 'A', 'CAD': 'A', 'NZD': 'A',
         'SGD': 'A', 'EUR': 'A', 'HUF': 'A', 'CHF': 'A', 'GBP': 'A', 'UAH': 'A',
@@ -64,5 +64,5 @@ def pull_from_nbp(currency_code, days):
     response = requests.get("http://api.nbp.pl/api/exchangerates/rates/{}/{}/last/{}?format=json".format(table_type, currency_code, days))
     response = raise_or_leave(response)
     response = response.json()
-    return  [rates["mid"] for rates in response["rates"]]
+    return [rates["mid"] for rates in response["rates"]]
 
