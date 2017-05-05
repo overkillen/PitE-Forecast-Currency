@@ -1,17 +1,21 @@
 import unittest
-import rest_server
+import currency_forecast_rest_server
 import json
 
 
 class TestRestServer(unittest.TestCase):
     def setUp(self):
-        rest_server.RestServer.app.config['TESTING'] = True
-        self.app = rest_server.RestServer.app.test_client()
+        currency_forecast_rest_server.RestServer.app.config['TESTING'] = True
+        self.app = currency_forecast_rest_server.RestServer.app.test_client()
 
     def test_welcome_message(self):
         expected_welcome_message = "Currency forecast"
         response = self.app.get('/')
         self.assertEqual(expected_welcome_message, response.data.decode())
+
+    def test_actual_currency_value(self):
+        response = self.app.get('/currency/actual/usd')
+        self.assertTrue("usd" in json.loads(response.data.decode()))
 
     def test_forecast_method_when_method_parameter_missing(self):
         default_method = "method1"

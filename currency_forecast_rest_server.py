@@ -28,12 +28,12 @@ class RestServer:
     """
     Returns actual currency value (for today).
     Example: GET /currency/actual/usd
-             Returns: {"usd:3.99"}
+             Returns: {"usd":3.99}
     """
     @staticmethod
     @app.route("/currency/actual/<currency>")
     def get_currency(currency):
-        response = JsonResponse(json.dumps({currency:"actual"}))
+        response = JsonResponse(json.dumps({currency:3.444}))
         return response.prepare_response()
 
     """
