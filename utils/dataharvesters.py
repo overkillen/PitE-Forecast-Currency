@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from requests import HTTPError
 import requests
 
@@ -15,16 +16,30 @@ def raise_or_leave(resp):
     return resp
 
 
-def pull_from_fixer(date='latest', base='PLN'):
-    if not isinstance(date, str):
+def pull_day_from_fixer(currency_code, date=None, base='PLN'):
+    """
+    """
+    if date is None:
+        date = 'latest'
+    else:
         date = date.strftime("%Y-%m-%d")
     """
     Date is a string (yyyy-mm-dd) or datetime.date object
     """
     url = 'http://api.fixer.io/{}'.format(date)
-    resp = requests.get(url, params={'base': base})
+    params = {'base': currency_code}
+    params['symbols'] = base
+    resp = requests.get(url, params=params)
     resp = raise_or_leave(resp)
-    return resp.json()
+    return resp.json()['rates'][base]
+
+
+def pull_days_from_fixer(currency_code, days, base="PLN"):
+    if days < 1:
+        return []
+    return [pull_day_from_fixer(
+                    currency_code, datetime.today() - timedelta(days=i), base)
+                    for i in range(days)]
 
 
 # Data in nbp api is splited into 2 categories
