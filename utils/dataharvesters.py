@@ -1,3 +1,5 @@
+import aiohttp
+import asyncio
 from datetime import datetime, timedelta
 from requests import HTTPError
 import requests
@@ -16,7 +18,7 @@ def raise_or_leave(resp):
     return resp
 
 
-def pull_day_from_fixer(currency_code, date=None, base='PLN'):
+async def pull_day_from_fixer(currency_code, date=None, base='PLN'):
     """
     """
     if date is None:
@@ -29,17 +31,22 @@ def pull_day_from_fixer(currency_code, date=None, base='PLN'):
     url = 'http://api.fixer.io/{}'.format(date)
     params = {'base': currency_code}
     params['symbols'] = base
-    resp = requests.get(url, params=params)
-    resp = raise_or_leave(resp)
-    return resp.json()['rates'][base]
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, params=params) as resp:
+            raise_or_leave(resp)
+            return await resp.json()
 
 
 def pull_days_from_fixer(currency_code, days, base="PLN"):
     if days < 1:
         return []
-    return [pull_day_from_fixer(
+    loop = asyncio.get_event_loop()
+    tasks = [pull_day_from_fixer(
                     currency_code, datetime.today() - timedelta(days=i), base)
                     for i in range(days)]
+    results =  [t.result()
+                for t in loop.run_until_complete(asyncio.wait(tasks))[0]]
+    return [i['rates'][base] for i in sorted(results, key=lambda x: x['date'])]
 
 
 # Data in nbp api is splited into 2 categories
