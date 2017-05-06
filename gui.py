@@ -1,0 +1,61 @@
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QGridLayout, QComboBox
+from PyQt5.QtGui import QIcon
+from currency_forecast_client_api import CurrencyForecastClient
+
+SERVER_URL = 'https://secure-chamber-24424.herokuapp.com'
+
+available_currencies = ['usd', 'eur', 'pln', 'gbp']
+
+
+class MainWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def show_currency(self):
+        client = CurrencyForecastClient(SERVER_URL)
+        response = client.get_actual_value_for_currency(self.currency_code)
+        self.current_value.setText(str(response[self.currency_code]))
+        print(response)
+
+    def get_base_currency(self, text):
+        self.currency_base = text
+
+    def get_code_currency(self, text):
+        self.currency_code = text
+
+    def initUI(self):
+        self.grid = QGridLayout()
+        self.setLayout(self.grid)
+        self.currency_base = self.currency_code = available_currencies[0]
+        self.currency_base_label = QLabel('Base currency', self)
+        self.grid.addWidget(self.currency_base_label, 0, 0)
+        self.currency_base_combo = QComboBox(self)
+        self.currency_base_combo.addItems(available_currencies)
+        self.currency_base_combo.activated[str].connect(self.get_base_currency)
+        self.grid.addWidget(self.currency_base_combo, 1, 0)
+        self.currency_code_label = QLabel('Output currency', self)
+        self.grid.addWidget(self.currency_code_label, 0, 1)
+        self.currency_code_combo = QComboBox(self)
+        self.currency_code_combo.addItems(available_currencies)
+        self.currency_code_combo.activated[str].connect(self.get_code_currency)
+        self.grid.addWidget(self.currency_code_combo, 1, 1)
+        self.setGeometry(650, 450, 300, 300)
+        self.setWindowTitle('Currency Forecasting')
+        self.setWindowIcon(QIcon('icon.png'))
+        self.get_currency_button = QPushButton('Get currency', self)
+        self.grid.addWidget(self.get_currency_button, 2, 0)
+        self.get_currency_button.clicked.connect(self.show_currency)
+        self.current_value = QLabel('', self)
+        self.grid.addWidget(self.current_value, 2, 1)
+        self.show()
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    main_window = MainWindow()
+    sys.exit(app.exec_())
+
+
+
