@@ -1,4 +1,5 @@
 import unittest
+from currency_forecast_rest_server import JsonResponse
 import currency_forecast_rest_server
 import json
 
@@ -21,12 +22,22 @@ class TestRestServer(unittest.TestCase):
         default_method = "method1"
         response = self.app.get('/currency/forecast/usd/pln')
         self.assertEqual(default_method, json.loads(response.data.decode())['method'])
+        self.assertTrue("usd" in json.loads(response.data.decode()))
 
     def test_forecast_method_when_method_parameter_present(self):
         default_method = "method2"
         response = self.app.get('/currency/forecast/usd/pln?method=method2')
         self.assertEqual(default_method, json.loads(response.data.decode())['method'])
+        self.assertTrue("usd" in json.loads(response.data.decode()))
 
     def test_forecast_unsupported_method(self):
         response = self.app.get('/currency/forecast/usd?method=abcdefg')
         self.assertEqual(404, response.status_code)
+
+
+class JsonResponseTest(unittest.TestCase):
+
+    def test_json_header_in_response(self):
+        json_response = JsonResponse(json.dumps("{\"a\":1}"))
+        header = json_response.prepare_response().content_type
+        self.assertEqual("application/json", header)
