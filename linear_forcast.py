@@ -15,12 +15,12 @@ from sklearn.linear_model import LinearRegression
 import numpy as np
 import matplotlib.pyplot as plt
 
-from utils.dataharvesters import pull_from_nbp
+from utils.dataharvesters import NBPClient
 
 
 def linear_extrapolation(currency_code, recent_weeks = "5", week_to_predict = 1):
     x = np.array(range(int(recent_weeks)))
-    y = pull_from_nbp(currency_code, recent_weeks)
+    y = NBPClient().pull_from_nbp(currency_code, recent_weeks)
     model = LinearRegression()
     model.fit(x.reshape(len(x), 1), y)
     #  To plot data

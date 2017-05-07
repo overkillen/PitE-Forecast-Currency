@@ -27,27 +27,27 @@ class RestServer:
     def index():
         return "Currency forecast"
 
-    """
-    Returns actual currency value in desired currency(for today).
-    Example: GET /currency/actual/usd/pln
-             Returns: actual USD currency value in PLN e.g. {"usd":3.99}
-    """
     @staticmethod
     @app.route("/currency/actual/<currency>/<output_currency>")
     def get_currency(currency, output_currency):
+        """
+           Returns actual currency value in desired currency(for today).
+           Example: GET /currency/actual/usd/pln
+                    Returns: actual USD currency value in PLN e.g. {"usd":3.99}
+        """
         fixer_response = RestServer.fixer_client.pull_currency_value(base=currency)
         response = JsonResponse(json.dumps({currency:fixer_response["rates"][output_currency.upper()]}))
         return response.prepare_response()
 
-    """
-       Returns currency forecast in desired output currency. You can specify method in 'method' parameter
-       Example: GET /currency/forecast/usd/pln
-                GET /currency/forecast/usd/pln?method=better_method
-                Returns: Currency forecast in desired output currency e.g. {"usd:3.99, "method":"better_method"}
-       """
     @staticmethod
     @app.route("/currency/forecast/<currency>/<output_currency>")
     def forecast_currency(currency, output_currency):
+        """
+            Returns currency forecast in desired output currency. You can specify method in 'method' parameter
+            Example: GET /currency/forecast/usd/pln
+                    GET /currency/forecast/usd/pln?method=better_method
+                    Returns: Currency forecast in desired output currency e.g. {"usd:3.99, "method":"better_method"}
+        """
         supported_methods = ["method1", "method2"]
         forecast_method = request.args.get('method')
         if forecast_method==None:
