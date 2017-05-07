@@ -1,10 +1,10 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QGridLayout, QComboBox
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QGridLayout, QComboBox, QLineEdit
 from PyQt5.QtGui import QIcon
 from currency_forecast_client_api import CurrencyForecastClient
 
 SERVER_URL = 'https://secure-chamber-24424.herokuapp.com'
-
+SERVER_PORT = 443
 available_currencies = ['usd', 'eur', 'pln', 'gbp']
 
 
@@ -13,10 +13,16 @@ class MainWindow(QWidget):
         super().__init__()
         self.initUI()
 
-    def show_currency(self):
-        client = CurrencyForecastClient(SERVER_URL)
-        response = client.get_actual_value_for_currency(self.currency_code)
-        self.current_value.setText(str(response[self.currency_code]))
+    def show_actual_currency(self):
+        client = CurrencyForecastClient(self.server_url.text(), int(self.server_port.text()))
+        response = client.get_actual_value_for_currency(self.currency_base, self.currency_code)
+        self.current_value.setText(str(response[self.currency_base]))
+        print(response)
+
+    def show_currency_forecast(self):
+        client = CurrencyForecastClient(self.server_url.text(), int(self.server_port.text()))
+        response = client.forecast_currency(self.currency_base, self.currency_code)
+        self.current_value.setText(str(response[self.currency_base]))
         print(response)
 
     def get_base_currency(self, text):
@@ -44,11 +50,25 @@ class MainWindow(QWidget):
         self.setGeometry(650, 450, 300, 300)
         self.setWindowTitle('Currency Forecasting')
         self.setWindowIcon(QIcon('icon.png'))
+
         self.get_currency_button = QPushButton('Get currency', self)
         self.grid.addWidget(self.get_currency_button, 2, 0)
-        self.get_currency_button.clicked.connect(self.show_currency)
+        self.get_currency_button.clicked.connect(self.show_actual_currency)
+
+        self.get_currency_forecast_button = QPushButton('Get currency forecast', self)
+        self.grid.addWidget(self.get_currency_forecast_button, 3, 0)
+        self.get_currency_forecast_button.clicked.connect(self.show_currency_forecast)
+
         self.current_value = QLabel('', self)
+        self.current_value.setObjectName('current_value')
+        self.current_value.setStyleSheet('QLabel#current_value {border-style:solid; border-width:2px; border-color:green;}')
         self.grid.addWidget(self.current_value, 2, 1)
+
+        self.server_url = QLineEdit(SERVER_URL, self)
+        self.grid.addWidget(self.server_url, 4, 0)
+        self.server_port = QLineEdit(str(SERVER_PORT), self)
+        self.grid.addWidget(self.server_port, 4, 1)
+
         self.show()
 
 
