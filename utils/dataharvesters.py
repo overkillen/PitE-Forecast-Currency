@@ -21,7 +21,7 @@ def raise_or_leave(resp):
 class FixerClient:
     FIXER_URL = 'http://api.fixer.io/'
 
-    async def _pull_for_one_day(currency_code, date=None, base='PLN'):
+    async def _pull_for_one_day(self, currency_code, date=None, base='PLN'):
         """
         """
         if date is None:
@@ -39,7 +39,7 @@ class FixerClient:
                 raise_or_leave(resp)
                 return await resp.json()
 
-    def pull_currency_value(self, date='latest', base='PLN'):
+    def pull_currency_value(self, currency_code, days, base='PLN'):
         if days < 1:
             return []
         loop = asyncio.get_event_loop()
@@ -88,7 +88,7 @@ class NBPClient:
             raise InvalidInput("Invalid currency code: {}".format(currency_code))
         response = requests.get(
             "{}{}/{}/last/{}?format=json".format(NBPClient.NBP_URL, table_type, currency_code, days))
-        response = raise_or_leave(response)
+        raise_or_leave(response)
         response = response.json()
         return [rates["mid"] for rates in response["rates"]]
 
