@@ -14,17 +14,17 @@ class TestRestServer(unittest.TestCase):
         self.assertEqual(expected_welcome_message, response.data.decode())
 
     def test_actual_currency_value(self):
-        response = self.app.get('/currency/actual/usd')
+        response = self.app.get('/currency/actual/usd/pln')
         self.assertTrue("usd" in json.loads(response.data.decode()))
 
     def test_forecast_method_when_method_parameter_missing(self):
         default_method = "method1"
-        response = self.app.get('/currency/forecast/usd')
+        response = self.app.get('/currency/forecast/usd/pln')
         self.assertEqual(default_method, json.loads(response.data.decode())['method'])
 
     def test_forecast_method_when_method_parameter_present(self):
         default_method = "method2"
-        response = self.app.get('/currency/forecast/usd?method=method2')
+        response = self.app.get('/currency/forecast/usd/pln?method=method2')
         self.assertEqual(default_method, json.loads(response.data.decode())['method'])
 
     def test_forecast_unsupported_method(self):

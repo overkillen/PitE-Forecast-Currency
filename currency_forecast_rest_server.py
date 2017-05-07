@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import request
+from utils.dataharvesters import FixerClient
 import flask
 import json
 import argparse
@@ -19,6 +20,7 @@ class JsonResponse:
 
 class RestServer:
     app = Flask("Rest Server")
+    fixer_client = FixerClient()
 
     @staticmethod
     @app.route("/")
@@ -26,32 +28,35 @@ class RestServer:
         return "Currency forecast"
 
     """
-    Returns actual currency value (for today).
-    Example: GET /currency/actual/usd
-             Returns: {"usd":3.99}
+    Returns actual currency value in desired currency(for today).
+    Example: GET /currency/actual/usd/pln
+             Returns: actual USD currency value in PLN e.g. {"usd":3.99}
     """
     @staticmethod
-    @app.route("/currency/actual/<currency>")
-    def get_currency(currency):
-        response = JsonResponse(json.dumps({currency:3.444}))
+    @app.route("/currency/actual/<currency>/<output_currency>")
+    def get_currency(currency, output_currency):
+        fixer_response = RestServer.fixer_client.pull_currency_value(base=currency)
+        response = JsonResponse(json.dumps({currency:fixer_response["rates"][output_currency.upper()]}))
         return response.prepare_response()
 
     """
-       Returns currency forecast. You can specify method in 'method' parameter
-       Example: GET /currency/forecast/usd
-                GET /currency/forecast/usd?method=better_method
-                Returns: {"usd:3.99, "method":"better_method"}
+       Returns currency forecast in desired output currency. You can specify method in 'method' parameter
+       Example: GET /currency/forecast/usd/pln
+                GET /currency/forecast/usd/pln?method=better_method
+                Returns: Currency forecast in desired output currency e.g. {"usd:3.99, "method":"better_method"}
        """
     @staticmethod
-    @app.route("/currency/forecast/<currency>")
-    def forecast_currency(currency):
+    @app.route("/currency/forecast/<currency>/<output_currency>")
+    def forecast_currency(currency, output_currency):
         supported_methods = ["method1", "method2"]
         forecast_method = request.args.get('method')
         if forecast_method==None:
             forecast_method=supported_methods[0]
         if not (forecast_method in supported_methods):
             return flask.Response(status=404)
-        response = JsonResponse(json.dumps({currency:"forecast", "method":forecast_method}))
+        fixer_response = RestServer.fixer_client.pull_currency_value(base=currency)
+        currency_value = fixer_response["rates"][output_currency.upper()]*2
+        response = JsonResponse(json.dumps({currency: currency_value, "method":forecast_method}))
         return response.prepare_response()
 
     @staticmethod
