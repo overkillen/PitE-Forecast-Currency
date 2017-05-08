@@ -20,13 +20,13 @@ class MainWindow(QWidget):
     def show_actual_currency(self):
         client = CurrencyForecastClient(self.server_url.text(), int(self.server_port.text()))
         response = client.get_actual_value_for_currency(self.currency_base, self.currency_code)
-        self.current_value.setText(str(response[self.currency_base]))
+        self.current_value.setText(str(response[self.currency_base]) + " " + self.currency_code)
         print(response)
 
     def show_currency_forecast(self):
         client = CurrencyForecastClient(self.server_url.text(), int(self.server_port.text()))
         response = client.forecast_currency(self.currency_base, self.currency_code)
-        self.predicted_value.setText(str(response[self.currency_base]))
+        self.predicted_value.setText(str(response[self.currency_base]) + " " + self.currency_code)
         print(response)
 
     def get_base_currency(self, text):
@@ -56,8 +56,10 @@ class MainWindow(QWidget):
         self.grid.addWidget(self.current_value, 2, 1)
         self.grid.addWidget(self.get_currency_forecast_button, 3, 0)
         self.grid.addWidget(self.predicted_value, 3, 1)
-        self.grid.addWidget(self.server_url, 4, 0)
-        self.grid.addWidget(self.server_port, 4, 1)
+        self.grid.addWidget(self.server_url_label, 4, 0)
+        self.grid.addWidget(self.server_url, 4, 1)
+        self.grid.addWidget(self.server_port_label, 5, 0)
+        self.grid.addWidget(self.server_port, 5, 1)
 
     def initUI(self):
         self.grid = QGridLayout()
@@ -69,7 +71,7 @@ class MainWindow(QWidget):
 
         self._setup_currency_code()
 
-        self.get_currency_button = QPushButton('Get currency', self)
+        self.get_currency_button = QPushButton('Get actual currency rate', self)
         self.get_currency_button.clicked.connect(self.show_actual_currency)
 
         self.get_currency_forecast_button = QPushButton('Get currency forecast', self)
@@ -82,6 +84,12 @@ class MainWindow(QWidget):
         self.predicted_value = QLabel('', self)
         self.predicted_value.setObjectName('predicted_value')
         self.predicted_value.setStyleSheet('QLabel#predicted_value {border-style:solid; border-width:2px; border-color:red;}')
+
+        self.server_url_label = QLabel('Server URL', self)
+        self.server_url_label.setFixedHeight(15)
+
+        self.server_port_label = QLabel('Server port', self)
+        self.server_port_label.setFixedHeight(15)
 
         self.server_url = QLineEdit(SERVER_URL, self)
         self.server_port = QLineEdit(str(SERVER_PORT), self)
