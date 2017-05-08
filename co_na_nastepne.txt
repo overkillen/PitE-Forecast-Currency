@@ -2,3 +2,9 @@ podłączenie się pod źródła danych
 gui ma je wyświetlać
 żeby działało na zewnętrznym serwerze
 i mock przewidywania
+-------------------------------------------
+wieksza częstość kursów walut
+sentdex obczaić???????????
+każdy weźmie po jednej metodzie i potestuje i jedna z tych osób robi rekurencyjną sieć neuronową
+później dołączamy to co wyżej
+opisać te metody do raportu
