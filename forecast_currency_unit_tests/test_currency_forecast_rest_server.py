@@ -31,8 +31,12 @@ class TestRestServer(unittest.TestCase):
         self.assertTrue("usd" in json.loads(response.data.decode()))
 
     def test_forecast_unsupported_method(self):
-        response = self.app.get('/currency/forecast/usd?method=abcdefg')
+        response = self.app.get('/currency/forecast/usd/pln?method=abcdefg')
         self.assertEqual(404, response.status_code)
+
+    def test_currencies_are_the_same(self):
+        response = self.app.get('/currency/forecast/usd/usd')
+        self.assertEqual(1, json.loads(response.data.decode())['usd'])
 
 
 class JsonResponseTest(unittest.TestCase):
