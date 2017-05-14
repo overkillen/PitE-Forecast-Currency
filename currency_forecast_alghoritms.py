@@ -16,6 +16,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from utils.dataharvesters import NBPClient
+from utils.dataharvesters import FixerClient
+
+FIXER_CLIENT = FixerClient()
 
 
 def linear_extrapolation(currency_code, recent_weeks = "5", week_to_predict = 1):
@@ -34,8 +37,13 @@ def linear_extrapolation(currency_code, recent_weeks = "5", week_to_predict = 1)
 
 
 # TO IMPLEMENT  http://www.investopedia.com/articles/forex/11/4-ways-to-forecast-exchange-rates.asp
-def purchasing_power_parity():
-    return 0
+def purchasing_power_parity(base_currency, output_currency):
+    base_inflation = 2
+    output_inflation = 4
+    inflation_difference = output_inflation - base_inflation
+    response = FIXER_CLIENT.pull_currency_value(base_currency)
+    output_currency_value = response["rates"][output_currency.upper()]
+    return (1+inflation_difference/100)*output_currency_value
 
 
 def arma_prediction():
