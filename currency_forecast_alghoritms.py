@@ -14,6 +14,8 @@ import json, requests
 from sklearn.linear_model import LinearRegression
 import numpy as np
 import matplotlib.pyplot as plt
+import keras
+
 
 from utils.dataharvesters import NBPClient
 from utils.dataharvesters import FixerClient
@@ -50,6 +52,7 @@ def arma_prediction():
     return 0
 
 
+#example http://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/
 def recurrent_neural_network():
     return 0
 

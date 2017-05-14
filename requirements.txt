@@ -32,3 +32,4 @@ traitlets==4.3.2
 wcwidth==0.1.7
 Werkzeug==0.12.1
 pyqt5==5.8.2
+keras==2.0.4
