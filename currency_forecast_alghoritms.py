@@ -20,7 +20,7 @@ from utils.dataharvesters import NBPClient
 
 def linear_extrapolation(currency_code, recent_weeks = "5", week_to_predict = 1):
     x = np.array(range(int(recent_weeks)))
-    y = NBPClient().pull_from_nbp(currency_code, recent_weeks)
+    y = NBPClient().pull_currency_value(currency_code, recent_weeks)
     model = LinearRegression()
     model.fit(x.reshape(len(x), 1), y)
     #  To plot data
@@ -30,6 +30,21 @@ def linear_extrapolation(currency_code, recent_weeks = "5", week_to_predict = 1)
     #  plt.scatter(week_to_predict + int(recent_weeks), model.predict(week_to_predict), color='r')
     #  plt.show()
     return model.predict(week_to_predict + int(recent_weeks))
+
+
+
+# TO IMPLEMENT  http://www.investopedia.com/articles/forex/11/4-ways-to-forecast-exchange-rates.asp
+def purchasing_power_parity():
+    return 0
+
+
+def arma_prediction():
+    return 0
+
+
+def recurrent_neural_network():
+    return 0
+
 
 #testing 
 # print (linear_extrapolation("SZL"))
