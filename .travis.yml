@@ -3,4 +3,7 @@ python:
     - "3.6"
 install: "pip install -r requirements.txt"
 script:
-- export KERAS_BACKEND=theano python -c "from keras import backend" && python -m unittest -v
+- mkdir -p $HOME/.keras/
+- touch $HOME/.keras/keras.json
+- echo "{    \"image_data_format\": \"channels_last\",    \"epsilon\": 1e-07,    \"floatx\": \"float32\",    \"backend\": \"theano\"}" > $HOME/.keras/keras.json
+- python -m unittest -v
