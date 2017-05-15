@@ -3,5 +3,4 @@ python:
     - "3.6"
 install: "pip install -r requirements.txt"
 script:
-- KERAS_BACKEND=theano python -c "from keras import backend"
-- python -m unittest -v
+- KERAS_BACKEND=theano python -c "from keras import backend" && python -m unittest -v
