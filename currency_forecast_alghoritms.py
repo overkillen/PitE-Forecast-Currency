@@ -42,7 +42,7 @@ def purchasing_power_parity(base_currency, output_currency):
     base_inflation = 2
     output_inflation = 4
     inflation_difference = output_inflation - base_inflation
-    response = FIXER_CLIENT.pull_currency_value(base_currency)
+    response = FIXER_CLIENT.pull_currency_value(base=base_currency)
     output_currency_value = response["rates"][output_currency.upper()]
     return (1+inflation_difference/100)*output_currency_value
 
