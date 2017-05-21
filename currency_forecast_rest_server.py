@@ -76,7 +76,7 @@ class RestServer:
             if forecast_method == supported_methods[1]:
                 currency_value = RestServer.precomputed
             elif forecast_method == supported_methods[0]:
-                currency_value == purchasing_power_parity(currency, output_currency)
+                currency_value = purchasing_power_parity(currency, output_currency)
 
 
             response = JsonResponse(json.dumps({currency: currency_value, "method":forecast_method}))
