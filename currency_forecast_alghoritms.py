@@ -37,7 +37,6 @@ def linear_extrapolation(currency_code, recent_weeks = "5", week_to_predict = 1)
     return model.predict(week_to_predict + int(recent_weeks))
 
 
-
 # TO IMPLEMENT  http://www.investopedia.com/articles/forex/11/4-ways-to-forecast-exchange-rates.asp
 def purchasing_power_parity(base_currency, output_currency):
     base_inflation = 2
@@ -57,7 +56,7 @@ def recurrent_neural_network():
     client = NBPClient()
     data = np.array(client.pull_currency_value("USD", 240))
     lstm = CurrencyLSTM(data)
-    return lstm.predict(data[len(data)-1])
+    return lstm.predict()
 
 
 #testing 

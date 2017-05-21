@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import request
 
-from currency_forecast_alghoritms import recurrent_neural_network
+from currency_forecast_alghoritms import recurrent_neural_network, purchasing_power_parity
 from utils.dataharvesters import FixerClient
 import flask
 import json
@@ -73,8 +73,10 @@ class RestServer:
             fixer_response = RestServer.fixer_client.pull_currency_value(base=currency)
             currency_value = fixer_response["rates"][output_currency.upper()] * 2
 
-            if forecast_method==supported_methods[1]:
+            if forecast_method == supported_methods[1]:
                 currency_value = RestServer.precomputed
+            elif forecast_method == supported_methods[0]:
+                currency_value == purchasing_power_parity(currency, output_currency)
 
 
             response = JsonResponse(json.dumps({currency: currency_value, "method":forecast_method}))
