@@ -7,6 +7,7 @@ import flask
 import json
 import argparse
 import threading
+import time
 
 
 class JsonResponse:
@@ -85,7 +86,9 @@ class RestServer:
 
 
 def update_lstm():
-    RestServer.precomputed = recurrent_neural_network()
+    while True:
+        RestServer.precomputed = recurrent_neural_network()
+        time.sleep(3600)
 
 
 if __name__ == '__main__':
