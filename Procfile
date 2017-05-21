@@ -1,1 +1,1 @@
-web: mkdir -p $HOME/.keras/ && cp keras.json $HOME/.keras/keras.json && python currency_forecast_rest_server.py --port $PORT
+web: python currency_forecast_rest_server.py --port $PORT
