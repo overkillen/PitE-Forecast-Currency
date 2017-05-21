@@ -6,6 +6,7 @@ from utils.dataharvesters import FixerClient
 import flask
 import json
 import argparse
+import threading
 
 
 class JsonResponse:
@@ -23,6 +24,7 @@ class JsonResponse:
 class RestServer:
     app = Flask("Rest Server")
     fixer_client = FixerClient()
+    precomputed = -1
 
     @staticmethod
     def generate_response_for_the_same_currencies(currency):
@@ -71,7 +73,7 @@ class RestServer:
             currency_value = fixer_response["rates"][output_currency.upper()] * 2
 
             if forecast_method==supported_methods[1]:
-                currency_value = recurrent_neural_network()
+                currency_value = RestServer.precomputed
 
 
             response = JsonResponse(json.dumps({currency: currency_value, "method":forecast_method}))
@@ -82,10 +84,16 @@ class RestServer:
         RestServer.app.run(host='0.0.0.0', port=port_to_listen)
 
 
+def update_lstm():
+    RestServer.precomputed = recurrent_neural_network()
+
+
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser(description='Runs rest server for forecast currency')
     argparser.add_argument('--port', dest='port', default=5000)
     args = argparser.parse_args()
-
+    updater = threading.Thread(target=update_lstm())
+    updater.daemon = True
+    updater.start()
     server = RestServer()
     server.run_server(args.port)

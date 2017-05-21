@@ -30,10 +30,10 @@ class CurrencyLSTM:
         to_predict = np.reshape(to_predict, (1, 1, 1))
         trainX = np.reshape(trainX, (len(trainX), 1, 1))
         model = Sequential()
-        model.add(LSTM(3, input_shape=(1, self.look_back), stateful=True, batch_size=1))
+        model.add(LSTM(2, input_shape=(1, self.look_back), stateful=True, batch_size=1))
         model.add(Dense(1))
         model.compile(loss='mean_squared_error', optimizer='adam')
-        model.fit(trainX, trainY, epochs=1000, batch_size=1, verbose=10)
+        model.fit(trainX, trainY, epochs=300, batch_size=1, verbose=10)
 
         return scaler.inverse_transform(model.predict(to_predict))
 
