@@ -35,6 +35,6 @@ class CurrencyLSTM:
         model.compile(loss='mean_squared_error', optimizer='adam')
         model.fit(trainX, trainY, epochs=300, batch_size=1, verbose=10)
 
-        return scaler.inverse_transform(model.predict(to_predict))[0][0]
+        return scaler.inverse_transform(model.predict(to_predict))[0][0].item()
 
 
