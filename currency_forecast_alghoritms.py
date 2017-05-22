@@ -12,12 +12,13 @@ requirement scikit-learn, matplotlib - optional for plots
 
 import json, requests
 from sklearn.linear_model import LinearRegression
+from statsmodels.tsa.arima_model import ARIMA
 import numpy as np
 import matplotlib.pyplot as plt
 import keras
 
 from currency_lstm import CurrencyLSTM
-from utils.dataharvesters import NBPClient, HourlyCollector
+from utils.dataharvesters import NBPClient, HourlyCollector, HerokuDumpClient
 from utils.dataharvesters import FixerClient
 
 FIXER_CLIENT = FixerClient()
@@ -47,9 +48,12 @@ def purchasing_power_parity(base_currency, output_currency):
     return (1+inflation_difference/100)*output_currency_value
 
 
-def arma_prediction():
-    return 0
-
+def arima_prediction(output_currency):
+    data = HerokuDumpClient().pull_currency_value(output_currency)
+    model = ARIMA(data, order =(2, 1, 0))
+    model_fit = model.fit(disp=0)
+    return model_fit.forecast()[0]
+    
 
 #example http://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/
 def recurrent_neural_network( output_currency):
