@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 import keras
 
 from currency_lstm import CurrencyLSTM
-from utils.dataharvesters import NBPClient, HourlyCollector, HerokuDumpClient
+from utils.dataharvesters import NBPClient, HourlyCollector
 from utils.dataharvesters import FixerClient
 
 FIXER_CLIENT = FixerClient()
@@ -49,7 +49,7 @@ def purchasing_power_parity(base_currency, output_currency):
 
 
 def arima_prediction(output_currency):
-    data = HerokuDumpClient().pull_currency_value(output_currency)
+    data = HourlyCollector().pull_data(output_currency)
     model = ARIMA(data, order =(2, 1, 0))
     model_fit = model.fit(disp=0)
     return model_fit.forecast()[0]
