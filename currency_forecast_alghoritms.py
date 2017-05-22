@@ -10,20 +10,25 @@ output:
 requirement scikit-learn, matplotlib - optional for plots
 '''
 
-import json, requests
-from sklearn.linear_model import LinearRegression
-import numpy as np
-import matplotlib.pyplot as plt
-import keras
+import json
 
+import requests
+
+import keras
+import matplotlib.pyplot as plt
+import numpy as np
 from currency_lstm import CurrencyLSTM
-from utils.dataharvesters import NBPClient, HourlyCollector
-from utils.dataharvesters import FixerClient
+from sklearn.linear_model import LinearRegression
+from utils.dataharvesters import FixerClient, HourlyCollector, NBPClient
 
 FIXER_CLIENT = FixerClient()
 
+def polynomial_extrapolation(x, y):
+    params = np.polyfit(x, y, len(x))
+    next_arg = max(x) + 1
+    return sum(next_arg * i for i in params)
 
-def linear_extrapolation(currency_code, recent_weeks = "5", week_to_predict = 1):
+def linear_regression(currency_code, recent_weeks = "5", week_to_predict = 1):
     x = np.array(range(int(recent_weeks)))
     y = NBPClient().pull_currency_value(currency_code, recent_weeks)
     model = LinearRegression()
