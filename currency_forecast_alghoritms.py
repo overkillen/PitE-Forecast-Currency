@@ -26,8 +26,8 @@ FIXER_CLIENT = FixerClient()
 
 def polynomial_extrapolation(x, y):
     params = np.polyfit(x, y, len(x))
-    next_arg = max(x) + 1
-    return sum(next_arg * i for i in params)
+    next_arg = len(x) + 1
+    return sum(next_arg**n * a for n, a in enumerate(reversed(params)))
 
 def polynomial_extrapolation2(x, y):
     return interpolate.interp1d(x, y, fill_value="extrapolate")
