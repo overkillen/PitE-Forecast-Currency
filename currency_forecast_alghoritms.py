@@ -53,7 +53,7 @@ def arma_prediction():
 
 
 #example http://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/
-def recurrent_neural_network():
+def recurrent_neural_network(samples):
     return 0
 
 
