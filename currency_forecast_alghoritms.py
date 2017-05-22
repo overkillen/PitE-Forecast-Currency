@@ -16,8 +16,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import keras
 
-
-from utils.dataharvesters import NBPClient
+from currency_lstm import CurrencyLSTM
+from utils.dataharvesters import NBPClient, HourlyCollector
 from utils.dataharvesters import FixerClient
 
 FIXER_CLIENT = FixerClient()
@@ -37,13 +37,12 @@ def linear_extrapolation(currency_code, recent_weeks = "5", week_to_predict = 1)
     return model.predict(week_to_predict + int(recent_weeks))
 
 
-
 # TO IMPLEMENT  http://www.investopedia.com/articles/forex/11/4-ways-to-forecast-exchange-rates.asp
 def purchasing_power_parity(base_currency, output_currency):
     base_inflation = 2
     output_inflation = 4
     inflation_difference = output_inflation - base_inflation
-    response = FIXER_CLIENT.pull_currency_value(base_currency)
+    response = FIXER_CLIENT.pull_currency_value(base=base_currency)
     output_currency_value = response["rates"][output_currency.upper()]
     return (1+inflation_difference/100)*output_currency_value
 
@@ -53,8 +52,11 @@ def arma_prediction():
 
 
 #example http://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/
-def recurrent_neural_network(samples):
-    return 0
+def recurrent_neural_network( output_currency):
+    client = HourlyCollector()
+    data = np.array(client.pull_data(output_currency))
+    lstm = CurrencyLSTM(data)
+    return lstm.predict()
 
 
 #testing 

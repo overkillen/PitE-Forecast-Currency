@@ -71,3 +71,15 @@ class NBPClient:
         response = response.json()
         return [rates["mid"] for rates in response["rates"]]
 
+
+class HourlyCollector():
+    def pull_data(self, output_currency):
+        """
+        :return: Currency rate list where base is always USD and output is passed by output_currency
+        """
+        currency_list = []
+        response = requests.get("https://currencycollector.herokuapp.com/dump").json()
+        for record in response:
+            currency_list.append(record['quotes']['USD' + output_currency.upper()])
+        return currency_list
+
