@@ -12,11 +12,12 @@ requirement scikit-learn, matplotlib - optional for plots
 
 import json
 
+import numpy as np
 import requests
+from scipy import interpolate
 
 import keras
 import matplotlib.pyplot as plt
-import numpy as np
 from currency_lstm import CurrencyLSTM
 from sklearn.linear_model import LinearRegression
 from utils.dataharvesters import FixerClient, HourlyCollector, NBPClient
@@ -27,6 +28,9 @@ def polynomial_extrapolation(x, y):
     params = np.polyfit(x, y, len(x))
     next_arg = max(x) + 1
     return sum(next_arg * i for i in params)
+
+def polynomial_extrapolation2(x, y):
+    return interpolate.interp1d(x, y, fill_value="extrapolate")
 
 def linear_regression(currency_code, recent_weeks = "5", week_to_predict = 1):
     x = np.array(range(int(recent_weeks)))
