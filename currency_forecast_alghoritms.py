@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import keras
 
 from currency_lstm import CurrencyLSTM
-from utils.dataharvesters import NBPClient
+from utils.dataharvesters import NBPClient, HourlyCollector
 from utils.dataharvesters import FixerClient
 
 FIXER_CLIENT = FixerClient()
@@ -52,9 +52,9 @@ def arma_prediction():
 
 
 #example http://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/
-def recurrent_neural_network():
-    client = NBPClient()
-    data = np.array(client.pull_currency_value("USD", 240))
+def recurrent_neural_network( output_currency):
+    client = HourlyCollector()
+    data = np.array(client.pull_data(output_currency))
     lstm = CurrencyLSTM(data)
     return lstm.predict()
 

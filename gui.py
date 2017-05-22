@@ -7,6 +7,7 @@ from currency_forecast_client_api import CurrencyForecastClient
 SERVER_URL = 'https://secure-chamber-24424.herokuapp.com'
 SERVER_PORT = 443
 available_currencies = ['usd', 'eur', 'pln', 'gbp']
+available_methods = ["ppp", "lstm", "arma", "lin"]
 
 
 class MainWindow(QWidget):
@@ -25,7 +26,7 @@ class MainWindow(QWidget):
 
     def show_currency_forecast(self):
         client = CurrencyForecastClient(self.server_url.text(), int(self.server_port.text()))
-        response = client.forecast_currency(self.currency_base, self.currency_code)
+        response = client.forecast_currency(self.currency_base, self.currency_code, self.currency_method)
         self.predicted_value.setText(str(response[self.currency_base]) + " " + self.currency_code)
         print(response)
 
@@ -34,6 +35,9 @@ class MainWindow(QWidget):
 
     def get_code_currency(self, text):
         self.currency_code = text
+
+    def get_currency_method(self, text):
+        self.currency_method = text
 
     def _setup_currency_base(self):
         self.currency_base_label = QLabel('Base currency', self)
@@ -47,6 +51,14 @@ class MainWindow(QWidget):
         self.currency_code_combo.addItems(available_currencies)
         self.currency_code_combo.activated[str].connect(self.get_code_currency)
 
+    def _setup_currency_method(self):
+        self.currency_method_label = QLabel('Forecast method', self)
+        self.currency_method_combo = QComboBox(self)
+        self.currency_method_combo.addItems(available_methods)
+        self.currency_method_combo.activated[str].connect(self.get_currency_method)
+        self.currency_method = available_methods[0]
+
+
     def _setup_grid(self):
         self.grid.addWidget(self.currency_base_label, 0, 0)
         self.grid.addWidget(self.currency_base_combo, 0, 1)
@@ -54,12 +66,14 @@ class MainWindow(QWidget):
         self.grid.addWidget(self.currency_code_combo, 1, 1)
         self.grid.addWidget(self.get_currency_button, 2, 0)
         self.grid.addWidget(self.current_value, 2, 1)
-        self.grid.addWidget(self.get_currency_forecast_button, 3, 0)
-        self.grid.addWidget(self.predicted_value, 3, 1)
-        self.grid.addWidget(self.server_url_label, 4, 0)
-        self.grid.addWidget(self.server_url, 4, 1)
-        self.grid.addWidget(self.server_port_label, 5, 0)
-        self.grid.addWidget(self.server_port, 5, 1)
+        self.grid.addWidget(self.currency_method_label, 3, 0)
+        self.grid.addWidget(self.currency_method_combo, 3, 1)
+        self.grid.addWidget(self.get_currency_forecast_button, 4, 0)
+        self.grid.addWidget(self.predicted_value, 4, 1)
+        self.grid.addWidget(self.server_url_label, 5, 0)
+        self.grid.addWidget(self.server_url, 5, 1)
+        self.grid.addWidget(self.server_port_label, 6, 0)
+        self.grid.addWidget(self.server_port, 6, 1)
 
     def initUI(self):
         self.grid = QGridLayout()
@@ -70,6 +84,8 @@ class MainWindow(QWidget):
         self._setup_currency_base()
 
         self._setup_currency_code()
+
+        self._setup_currency_method()
 
         self.get_currency_button = QPushButton('Get actual currency rate', self)
         self.get_currency_button.clicked.connect(self.show_actual_currency)

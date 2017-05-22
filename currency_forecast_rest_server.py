@@ -89,7 +89,7 @@ class RestServer:
 
 def update_lstm():
     while True:
-        RestServer.precomputed = recurrent_neural_network()
+        RestServer.precomputed = recurrent_neural_network("PLN")
         time.sleep(3600)
 
 

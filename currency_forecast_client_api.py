@@ -18,7 +18,7 @@ class CurrencyForecastClient:
         response = requests.get("{}/currency/actual/{}/{}".format(self.address, currency, output_currency))
         return response.json()
 
-    def forecast_currency(self, currency, output_currency, method="method1"):
+    def forecast_currency(self, currency, output_currency, method="ppp"):
         """
             Returns as json: {"currency_name":forecast_currency_value_in_desired_output_currency, "method":"forecast_method_name"}
         """
