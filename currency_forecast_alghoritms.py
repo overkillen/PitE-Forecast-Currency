@@ -10,8 +10,8 @@ output:
 requirement scikit-learn, matplotlib - optional for plots
 '''
 
+from statsmodels.tsa.arima_model import ARIMA
 import json
-
 import numpy as np
 import requests
 from scipy import interpolate
@@ -56,9 +56,12 @@ def purchasing_power_parity(base_currency, output_currency):
     return (1+inflation_difference/100)*output_currency_value
 
 
-def arma_prediction():
-    return 0
-
+def arima_prediction(output_currency):
+    data = HourlyCollector().pull_data(output_currency)
+    model = ARIMA(data, order =(2, 1, 0))
+    model_fit = model.fit(disp=0)
+    return model_fit.forecast()[0]
+    
 
 #example http://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/
 def recurrent_neural_network( output_currency):
