@@ -10,21 +10,29 @@ output:
 requirement scikit-learn, matplotlib - optional for plots
 '''
 
-import json, requests
-from sklearn.linear_model import LinearRegression
 from statsmodels.tsa.arima_model import ARIMA
+import json
 import numpy as np
-import matplotlib.pyplot as plt
-import keras
+import requests
+from scipy import interpolate
 
+import keras
+import matplotlib.pyplot as plt
 from currency_lstm import CurrencyLSTM
-from utils.dataharvesters import NBPClient, HourlyCollector
-from utils.dataharvesters import FixerClient
+from sklearn.linear_model import LinearRegression
+from utils.dataharvesters import FixerClient, HourlyCollector, NBPClient
 
 FIXER_CLIENT = FixerClient()
 
+def polynomial_extrapolation(x, y):
+    params = np.polyfit(x, y, len(x))
+    next_arg = len(x) + 1
+    return sum(next_arg**n * a for n, a in enumerate(reversed(params)))
 
-def linear_extrapolation(currency_code, recent_weeks = "5", week_to_predict = 1):
+def polynomial_extrapolation2(x, y):
+    return interpolate.interp1d(x, y, fill_value="extrapolate")
+
+def linear_regression(currency_code, recent_weeks = "5", week_to_predict = 1):
     x = np.array(range(int(recent_weeks)))
     y = NBPClient().pull_currency_value(currency_code, recent_weeks)
     model = LinearRegression()
