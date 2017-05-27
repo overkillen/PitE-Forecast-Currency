@@ -80,6 +80,7 @@ class HourlyCollector():
         currency_list = []
         response = requests.get("https://currencycollector.herokuapp.com/dump").json()
         for record in response:
-            currency_list.append(record['quotes']['USD' + output_currency.upper()])
+            if 'quotes' in record:
+                currency_list.append(record['quotes']['USD' + output_currency.upper()])
         return currency_list
 
