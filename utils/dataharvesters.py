@@ -3,6 +3,9 @@ import requests
 
 from .exceptions import DataPullError, InvalidInput
 
+CURRENCY_INFLATION = {
+            'PLN': 2.2, 'USD': 2.1, 'EUR': 2, 'CNY': 1.2, 'JLP': 0.3, 'GBP': 2.5, 
+            }
 
 def raise_or_leave(resp):
     """
