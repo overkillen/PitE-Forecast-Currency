@@ -27,7 +27,7 @@ def linear_regression(output_currency="PLN", client=HourlyCollector(), week_to_p
 
 
 # http://www.investopedia.com/articles/forex/11/4-ways-to-forecast-exchange-rates.asp
-def purchasing_power_parity( output_currency, client=FixerClient(), base_currency="USD"):
+def purchasing_power_parity( output_currency, base_currency="USD", client=FixerClient()):
     response = client.pull_currency_value(base=base_currency)
     output_currency_value = response["rates"][output_currency.upper()]
     return purchasing_power_parity_algorithm(output_currency_value)

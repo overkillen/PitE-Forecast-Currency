@@ -48,8 +48,8 @@ class RestServer:
         if currency==output_currency:
             return RestServer.generate_response_for_the_same_currencies(currency)
         else:
-            fixer_response = HourlyCollector().pull_currency_value(base=currency)
-            response = JsonResponse(json.dumps({currency:fixer_response["rates"][output_currency.upper()]}))
+            response = HourlyCollector().pull_data(output_currency)
+            response = JsonResponse(json.dumps({currency:response[-1]}))
             return response.prepare_response()
 
     @staticmethod
