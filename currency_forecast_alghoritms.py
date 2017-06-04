@@ -54,7 +54,7 @@ def arima_prediction(output_currency, client=HourlyCollector()):
     data = client.pull_data(output_currency)
     model = ARIMA(data, order=(2, 1, 0))
     model_fit = model.fit(disp=0)
-    return model_fit.forecast()[0]
+    return model_fit.forecast()[0].item()
 
 
 # example http://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/

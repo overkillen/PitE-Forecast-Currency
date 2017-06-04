@@ -25,8 +25,8 @@ class TestRestServer(unittest.TestCase):
         self.assertTrue("usd" in json.loads(response.data.decode()))
 
     def test_forecast_method_when_method_parameter_present(self):
-        default_method = "arma"
-        response = self.app.get('/currency/forecast/usd/pln?method=arma')
+        default_method = "arima"
+        response = self.app.get('/currency/forecast/usd/pln?method=arima')
         self.assertEqual(default_method, json.loads(response.data.decode())['method'])
         self.assertTrue("usd" in json.loads(response.data.decode()))
 
