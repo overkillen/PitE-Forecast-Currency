@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import request
 
-from currency_forecast_alghoritms import recurrent_neural_network, purchasing_power_parity
+from currency_forecast_alghoritms import recurrent_neural_network, purchasing_power_parity, arima_prediction
 from utils.dataharvesters import FixerClient
 import flask
 import json
@@ -64,23 +64,27 @@ class RestServer:
         if currency==output_currency:
             return RestServer.generate_response_for_the_same_currencies(currency)
         else:
-            supported_methods = ["ppp", "lstm", "arma", "lin"]
+            supported_methods = ["ppp", "lstm", "arima", "lin"]
             forecast_method = request.args.get('method')
             if forecast_method==None:
                 forecast_method=supported_methods[0]
             if not (forecast_method in supported_methods):
                 return flask.Response(status=404)
-            fixer_response = RestServer.fixer_client.pull_currency_value(base=currency)
-            currency_value = fixer_response["rates"][output_currency.upper()] * 2
-
-            if forecast_method == supported_methods[1]:
-                currency_value = RestServer.precomputed
-            elif forecast_method == supported_methods[0]:
-                currency_value = purchasing_power_parity(currency, output_currency)
-
-
+            currency_value = RestServer.handle_supported_methods(currency, forecast_method, output_currency,
+                                                                 supported_methods)
             response = JsonResponse(json.dumps({currency: currency_value, "method":forecast_method}))
             return response.prepare_response()
+
+    @staticmethod
+    def handle_supported_methods(currency, forecast_method, output_currency, supported_methods):
+        currency_value = -1
+        if forecast_method == supported_methods[0]:
+            currency_value = purchasing_power_parity(currency, output_currency)
+        elif forecast_method == supported_methods[1]:
+            currency_value = RestServer.precomputed
+        elif forecast_method == supported_methods[2]:
+            currency_value = arima_prediction(output_currency)
+        return currency_value
 
     @staticmethod
     def run_server(port_to_listen):
