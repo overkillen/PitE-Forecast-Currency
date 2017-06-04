@@ -6,7 +6,6 @@ from currency_forecast_client_api import CurrencyForecastClient
 
 SERVER_URL = 'https://secure-chamber-24424.herokuapp.com'
 SERVER_PORT = 443
-available_currencies = ['usd', 'pln']
 available_methods = ["ppp", "lstm", "arima", "lin"]
 
 
@@ -42,13 +41,13 @@ class MainWindow(QWidget):
     def _setup_currency_base(self):
         self.currency_base_label = QLabel('Base currency', self)
         self.currency_base_combo = QComboBox(self)
-        self.currency_base_combo.addItems(available_currencies)
+        self.currency_base_combo.addItem("USD")
         self.currency_base_combo.activated[str].connect(self.get_base_currency)
 
     def _setup_currency_code(self):
         self.currency_code_label = QLabel('Output currency', self)
         self.currency_code_combo = QComboBox(self)
-        self.currency_code_combo.addItems(available_currencies)
+        self.currency_code_combo.addItem("PLN")
         self.currency_code_combo.activated[str].connect(self.get_code_currency)
 
     def _setup_currency_method(self):
@@ -79,7 +78,8 @@ class MainWindow(QWidget):
         self.grid = QGridLayout()
         self.setLayout(self.grid)
 
-        self.currency_base = self.currency_code = available_currencies[0]
+        self.currency_base = "USD"
+        self.currency_code = "PLN"
 
         self._setup_currency_base()
 

@@ -1,8 +1,9 @@
 from flask import Flask
 from flask import request
 
-from currency_forecast_alghoritms import recurrent_neural_network, purchasing_power_parity, arima_prediction
-from utils.dataharvesters import FixerClient
+from currency_forecast_alghoritms import recurrent_neural_network, purchasing_power_parity, arima_prediction, \
+    linear_regression
+from utils.dataharvesters import FixerClient, HourlyCollector
 import flask
 import json
 import argparse
@@ -24,7 +25,6 @@ class JsonResponse:
 
 class RestServer:
     app = Flask("Rest Server")
-    fixer_client = FixerClient()
     precomputed = -1
 
     @staticmethod
@@ -48,7 +48,7 @@ class RestServer:
         if currency==output_currency:
             return RestServer.generate_response_for_the_same_currencies(currency)
         else:
-            fixer_response = RestServer.fixer_client.pull_currency_value(base=currency)
+            fixer_response = HourlyCollector().pull_currency_value(base=currency)
             response = JsonResponse(json.dumps({currency:fixer_response["rates"][output_currency.upper()]}))
             return response.prepare_response()
 
@@ -84,6 +84,8 @@ class RestServer:
             currency_value = RestServer.precomputed
         elif forecast_method == supported_methods[2]:
             currency_value = arima_prediction(output_currency)
+        else:
+            currency_value = linear_regression()
         return currency_value
 
     @staticmethod
