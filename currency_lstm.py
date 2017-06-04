@@ -43,7 +43,7 @@ class CurrencyLSTM:
         model.add(LSTM(15, input_shape=(1, self.look_back), stateful=True, batch_size=1))
         model.add(Dense(1))
         model.compile(loss='mean_squared_error', optimizer='adam')
-        model.fit(trainX, trainY, epochs=10000, batch_size=1, verbose=10)
+        model.fit(trainX, trainY, epochs=5000, batch_size=1, verbose=10)
 
         return scaler.inverse_transform(model.predict(to_predict))[0][0].item()
 
