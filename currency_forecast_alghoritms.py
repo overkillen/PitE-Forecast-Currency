@@ -6,6 +6,8 @@ from currency_lstm import CurrencyLSTM
 from sklearn.linear_model import LinearRegression
 from utils.dataharvesters import FixerClient, HourlyCollector
 
+CURRENCY_INFLATION = {'PLN': 2.2, 'USD': 2.1}
+
 
 def polynomial_extrapolation(x, y):
     params = np.polyfit(x, y, len(x))
@@ -30,7 +32,8 @@ def linear_regression(output_currency="PLN", client=HourlyCollector(), week_to_p
 def purchasing_power_parity(base_currency="USD", output_currency="PLN", client=HourlyCollector()):
     response = client.pull_data(output_currency)
     output_currency_value = response[-1]
-    return purchasing_power_parity_algorithm(output_currency_value)
+    return purchasing_power_parity_algorithm(output_currency_value, CURRENCY_INFLATION[base_currency.upper()],
+                                             CURRENCY_INFLATION[output_currency.upper()])
 
 
 def purchasing_power_parity_algorithm(output_currency_value, base_inflation=2,

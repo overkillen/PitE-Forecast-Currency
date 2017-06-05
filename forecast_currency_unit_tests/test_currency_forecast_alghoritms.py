@@ -12,4 +12,4 @@ class CurrencyAlghoritmsTest(unittest.TestCase):
 
         predicted_value = currency_forecast_alghoritms.purchasing_power_parity("USD", "PLN")
 
-        self.assertEquals(4.028, predicted_value)
+        self.assertEquals(4.004, predicted_value)
