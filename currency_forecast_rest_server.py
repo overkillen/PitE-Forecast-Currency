@@ -2,7 +2,7 @@ from flask import Flask
 from flask import request
 
 from currency_forecast_alghoritms import recurrent_neural_network, purchasing_power_parity, arima_prediction, \
-    linear_regression
+    linear_regression, polynomial_extrapolation, polynomial_extrapolation2
 from utils.dataharvesters import FixerClient, HourlyCollector
 import flask
 import json
@@ -64,7 +64,7 @@ class RestServer:
         if currency==output_currency:
             return RestServer.generate_response_for_the_same_currencies(currency)
         else:
-            supported_methods = ["ppp", "lstm", "arima", "lin"]
+            supported_methods = ["ppp", "lstm", "arima", "lin", "poly", "poly2"]
             forecast_method = request.args.get('method')
             if forecast_method==None:
                 forecast_method=supported_methods[0]
@@ -84,6 +84,10 @@ class RestServer:
             currency_value = RestServer.precomputed
         elif forecast_method == supported_methods[2]:
             currency_value = arima_prediction(output_currency)
+        elif forecast_method == supported_methods[4]:
+            currency_value = polynomial_extrapolation(output_currency)
+        elif forecast_method == supported_methods[5]:
+            currency_value = polynomial_extrapolation2(output_currency)
         else:
             currency_value = linear_regression()
         return currency_value

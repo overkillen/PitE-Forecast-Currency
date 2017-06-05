@@ -9,14 +9,18 @@ from utils.dataharvesters import FixerClient, HourlyCollector
 CURRENCY_INFLATION = {'PLN': 2.2, 'USD': 2.1}
 
 
-def polynomial_extrapolation(x, y):
-    params = np.polyfit(x, y, len(x))
+def polynomial_extrapolation(output_currency="PLN", client=HourlyCollector()):
+    y = client.pull_data(output_currency)
+    x = range(len(y))
+    params = np.polyfit(x, y, min([len(x), 100]))
     next_arg = len(x) + 1
     return sum(next_arg**n * a for n, a in enumerate(reversed(params)))
 
 
-def polynomial_extrapolation2(x, y):
-    return interpolate.interp1d(x, y, fill_value="extrapolate")
+def polynomial_extrapolation2(output_currency="PLN", client=HourlyCollector()):
+    y = client.pull_data(output_currency)
+    x = range(len(y))
+    return interpolate.interp1d(x, y, fill_value="extrapolate").y[-1]
 
 
 def linear_regression(output_currency="PLN", client=HourlyCollector(), week_to_predict=1, **kwargs):
