@@ -17,7 +17,7 @@ def polynomial_extrapolation(output_currency="PLN", client=HourlyCollector()):
     return sum(next_arg**n * a for n, a in enumerate(reversed(params)))
 
 
-def polynomial_extrapolation2(output_currency="PLN", client=HourlyCollector()):
+def linear_extrapolation(output_currency="PLN", client=HourlyCollector()):
     y = client.pull_data(output_currency)
     x = range(len(y))
     return interpolate.interp1d(x, y, fill_value="extrapolate").y[-1]

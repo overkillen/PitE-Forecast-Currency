@@ -6,7 +6,7 @@ from currency_forecast_client_api import CurrencyForecastClient
 
 SERVER_URL = 'https://secure-chamber-24424.herokuapp.com'
 SERVER_PORT = 443
-available_methods = ["ppp", "lstm", "arima", "lin", "poly", "poly2"]
+available_methods = ["ppp", "lstm", "arima", "lin", "poly_extr", "lin_extr"]
 
 
 class MainWindow(QWidget):
